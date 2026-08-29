@@ -1,0 +1,12 @@
+name = "excalibur-capi"
+main = "worker.js"
+compatibility_date = "2026-08-25"
+
+[vars]
+PIXEL_ID = "1916536729320394"
+# ALLOWED_ORIGIN = "https://SEU-SITE.netlify.app"   # opcional, restringe o CORS
+# TEST_EVENT_CODE = "TEST12345"                      # opcional, pra testar no Events Manager
+
+# META_ACCESS_TOKEN é secret — NÃO colocar aqui.
+# Rodar depois do deploy:
+#   wrangler secret put META_ACCESS_TOKEN

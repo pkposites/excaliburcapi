@@ -1,0 +1,11 @@
+# NUNCA versionar variáveis/segredos locais do wrangler
+.dev.vars
+.env
+.env.local
+
+# arquivos locais do wrangler
+.wrangler/
+
+# SO / editor
+.DS_Store
+node_modules/
