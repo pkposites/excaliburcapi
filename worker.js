@@ -50,7 +50,7 @@ export default {
       });
     }
 
-    const { event_name, event_id, event_source_url, fbp, fbc } = body || {};
+    const { event_name, event_id, event_source_url, fbp, fbc, attribution } = body || {};
 
     if (!event_name || !event_id) {
       return new Response(JSON.stringify({ error: 'missing_event_name_or_event_id' }), {
@@ -77,18 +77,33 @@ export default {
     if (fbp) userData.fbp = fbp;
     if (fbc) userData.fbc = fbc;
 
-    const payload = {
-      data: [
-        {
-          event_name,
-          event_time: Math.floor(Date.now() / 1000),
-          event_id,
-          event_source_url: event_source_url || '',
-          action_source: 'website',
-          user_data: userData,
-        },
-      ],
+    // Atribuição (fbclid, UTMs, campaign/adset/ad id) capturada na LP.
+    // Repassada como custom_data pra ficar visível no Events Manager e
+    // permitir cruzar lead x anúncio/campanha nos relatórios.
+    const ATTRIBUTION_KEYS = ['fbclid', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'campaign_id', 'adset_id', 'ad_id'];
+    const customData = {};
+    if (attribution && typeof attribution === 'object') {
+      for (const key of ATTRIBUTION_KEYS) {
+        const value = attribution[key];
+        if (typeof value === 'string' && value.length > 0 && value.length <= 256) {
+          customData[key] = value;
+        }
+      }
+    }
+
+    const eventEntry = {
+      event_name,
+      event_time: Math.floor(Date.now() / 1000),
+      event_id,
+      event_source_url: event_source_url || '',
+      action_source: 'website',
+      user_data: userData,
     };
+    if (Object.keys(customData).length > 0) {
+      eventEntry.custom_data = customData;
+    }
+
+    const payload = { data: [eventEntry] };
 
     if (env.TEST_EVENT_CODE) {
       payload.test_event_code = env.TEST_EVENT_CODE;
