@@ -7,6 +7,16 @@ PIXEL_ID = "1916536729320394"
 # ALLOWED_ORIGIN = "https://SEU-SITE.netlify.app"   # opcional, restringe o CORS
 # TEST_EVENT_CODE = "TEST12345"                      # opcional, pra testar no Events Manager
 
+# KV pra guardar fbp/fbc do clique original, casando com o evento offline
+# (lead qualificado / agendamento / venda) reportado depois via /offline-event.
+# Criar com: wrangler kv namespace create LEADS
+# e colar o "id" retornado abaixo.
+[[kv_namespaces]]
+binding = "LEADS"
+id = "COLE_AQUI_O_ID_DO_NAMESPACE_LEADS"
+
 # META_ACCESS_TOKEN é secret — NÃO colocar aqui.
+# OFFLINE_EVENTS_TOKEN também é secret — protege o endpoint /offline-event.
 # Rodar depois do deploy:
 #   wrangler secret put META_ACCESS_TOKEN
+#   wrangler secret put OFFLINE_EVENTS_TOKEN
